@@ -8,9 +8,12 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh}
 .app{max-width:900px;margin:0 auto;padding:16px}
-.top-bar{background:#fff;border-radius:16px;padding:16px 20px;margin-bottom:14px;border:1px solid #e8eaf0;display:flex;align-items:center;justify-content:space-between}
+.top-bar{background:#fff;border-radius:16px;padding:14px 20px;margin-bottom:14px;border:1px solid #e8eaf0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .top-bar h1{font-size:18px;font-weight:700;color:#1a1a2e}
-.top-bar span{font-size:13px;color:#8b8fa8;background:#f0f1f8;padding:4px 12px;border-radius:20px}
+.top-right{display:flex;align-items:center;gap:8px}
+.today-badge{font-size:13px;color:#8b8fa8;background:#f0f1f8;padding:4px 12px;border-radius:20px}
+.sync-msg{font-size:12px;color:#27c48e;font-weight:600;opacity:0;transition:opacity 0.4s}
+.sync-msg.show{opacity:1}
 .week-nav{background:linear-gradient(135deg,#4f6ef7,#7c5cbf);border-radius:16px;padding:16px 20px;margin-bottom:14px}
 .week-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .week-label{font-size:15px;font-weight:700;color:#fff}
@@ -27,10 +30,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sched-col{width:100%;display:flex;flex-direction:column;gap:4px;margin-top:2px}
 .sched-slot{background:rgba(255,255,255,0.15);border-radius:8px;padding:4px 5px;min-height:44px;cursor:pointer;transition:background 0.15s;position:relative}
 .sched-slot:hover{background:rgba(255,255,255,0.25)}
-.sched-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.6);margin-bottom:2px;letter-spacing:0.3px}
+.sched-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.6);margin-bottom:2px}
 .sched-text{font-size:11px;color:#fff;font-weight:500;line-height:1.3;word-break:keep-all}
 .sched-empty{font-size:10px;color:rgba(255,255,255,0.35);text-align:center;margin-top:4px}
-.sched-del{position:absolute;top:3px;right:3px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:11px;cursor:pointer;padding:0;line-height:1}
+.sched-del{position:absolute;top:3px;right:3px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:11px;cursor:pointer;padding:0}
 .sched-del:hover{color:#fff}
 .sections{display:flex;flex-direction:column;gap:12px}
 .section{border-radius:16px;overflow:hidden;box-shadow:2px 3px 0 rgba(0,0,0,0.07)}
@@ -42,7 +45,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .header-right{display:flex;align-items:center;gap:8px}
 .lunch-label{display:flex;align-items:center;gap:5px;cursor:pointer;background:rgba(255,255,255,0.6);border:1.5px solid rgba(255,255,255,0.9);border-radius:20px;padding:4px 10px 4px 8px;font-size:12px;font-weight:600;color:#555;white-space:nowrap}
 .badge{font-size:12px;background:rgba(255,255,255,0.6);color:#444;padding:4px 12px;border-radius:20px;font-weight:600;border:1px solid rgba(255,255,255,0.8)}
-.section-body{padding:0 16px 14px;display:block}
+.section-body{padding:0 16px 14px}
 .section-body.collapsed{display:none}
 .task-list{list-style:none;margin-bottom:10px}
 .task-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.06)}
@@ -52,25 +55,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .task-check.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
 .task-text{flex:1;font-size:14px;color:#2d2d2d;line-height:1.5}
 .task-text.done{text-decoration:line-through;color:#aaa}
-.task-del{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:14px;padding:0 2px;transition:color 0.15s;flex-shrink:0}
+.task-del{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:14px;padding:0 2px;flex-shrink:0}
 .task-del:hover{color:#e05}
 .add-row{display:flex;gap:8px;margin-top:6px}
-.add-input{flex:1;border:1.5px solid rgba(255,255,255,0.7);border-radius:10px;padding:8px 12px;font-size:14px;color:#2d2d2d;background:rgba(255,255,255,0.6);outline:none;transition:border 0.15s}
+.add-input{flex:1;border:1.5px solid rgba(255,255,255,0.7);border-radius:10px;padding:8px 12px;font-size:14px;color:#2d2d2d;background:rgba(255,255,255,0.6);outline:none}
 .add-input:focus{border-color:rgba(0,0,0,0.25);background:rgba(255,255,255,0.9)}
 .add-input::placeholder{color:#bbb}
-.add-btn{background:rgba(255,255,255,0.75);color:#333;border:1.5px solid rgba(255,255,255,0.9);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.add-btn{background:rgba(255,255,255,0.75);color:#333;border:1.5px solid rgba(255,255,255,0.9);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:700;cursor:pointer}
 .add-btn:hover{background:rgba(255,255,255,0.95)}
 .empty{font-size:13px;color:#bbb;padding:10px 0;text-align:center}
-
-/* 모달 */
+.loading{text-align:center;padding:40px;color:#aaa;font-size:14px}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:100}
-.modal{background:#fff;border-radius:16px;padding:24px;width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
+.modal{background:#fff;border-radius:16px;padding:24px;width:320px}
 .modal h3{font-size:16px;font-weight:700;margin-bottom:16px;color:#1a1a2e}
 .modal input{width:100%;border:1.5px solid #e0e2f0;border-radius:10px;padding:10px 12px;font-size:14px;outline:none;margin-bottom:10px}
 .modal input:focus{border-color:#4f6ef7}
 .modal-btns{display:flex;gap:8px;margin-top:6px}
 .modal-ok{flex:1;background:#4f6ef7;color:#fff;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:700;cursor:pointer}
-.modal-ok:hover{background:#3a5ce0}
 .modal-cancel{flex:1;background:#f0f1f8;color:#555;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:600;cursor:pointer}
 </style>
 </head>
@@ -78,9 +79,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app">
   <div class="top-bar">
     <h1>총무인사팀 주간업무</h1>
-    <span id="today-label"></span>
+    <div class="top-right">
+      <span class="sync-msg" id="sync-msg">✓ 자동저장 완료</span>
+      <span class="today-badge" id="today-label"></span>
+    </div>
   </div>
-
   <div class="week-nav">
     <div class="week-header">
       <span class="week-label" id="week-label"></span>
@@ -92,11 +95,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="calendar-grid" id="calendar"></div>
   </div>
-
-  <div class="sections" id="sections"></div>
+  <div class="sections" id="sections"><div class="loading">데이터 불러오는 중...</div></div>
 </div>
 
-<!-- 일정 입력 모달 -->
 <div class="modal-bg" id="modal" style="display:none">
   <div class="modal">
     <h3 id="modal-title">일정 추가</h3>
@@ -110,7 +111,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script>
 const MEMBERS=[
-  {id:'boss',name:'팀장 지시사항',role:'',emoji:'🐘',bg:'#FFF8DC',shadow:'#e8d88a'},
+  {id:'boss',name:'팀장 확인사항',role:'',emoji:'🐘',bg:'#FFF8DC',shadow:'#e8d88a'},
   {id:'noh',name:'노지혜',role:'과장',emoji:'🐰',bg:'#FFE4F0',shadow:'#f0b8d4'},
   {id:'cho',name:'조성근',role:'과장',emoji:'🦁',bg:'#FFF0DC',shadow:'#f0d09a'},
   {id:'choi',name:'최원익',role:'직원',emoji:'🦖',bg:'#DCF0FF',shadow:'#9acce8'},
@@ -118,16 +119,44 @@ const MEMBERS=[
   {id:'shin',name:'신우연',role:'직원',emoji:'🐱',bg:'#DCF8EC',shadow:'#9ae0bc'},
 ];
 const DAYS=['일','월','화','수','목','금','토'];
-let weekOffset=0, tasks={}, collapsed={}, lunch={}, schedules={};
-let modalTarget=null;
+const STORE_KEY='hrteam-data';
+let weekOffset=0,tasks={},collapsed={},lunch={},schedules={};
+let modalTarget=null,saveTimer=null,loaded=false;
 
-function getWeekStart(offset=0){
-  const d=new Date(),day=d.getDay();
-  d.setDate(d.getDate()-day+offset*7);d.setHours(0,0,0,0);return d;
-}
 function fmtKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function getWeekKey(){return fmtKey(getWeekStart(weekOffset))}
-function getSchedKey(dateStr,slot){return `${dateStr}_${slot}`}
+function getWeekStart(offset=0){const d=new Date(),day=d.getDay();d.setDate(d.getDate()-day+offset*7);d.setHours(0,0,0,0);return d;}
+function getWeekKey(){return fmtKey(getWeekStart(weekOffset));}
+
+async function persist(){
+  try{
+    const data={tasks,schedules,lunch,savedAt:new Date().toISOString()};
+    await window.storage.set(STORE_KEY, JSON.stringify(data));
+    const msg=document.getElementById('sync-msg');
+    msg.classList.add('show');
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(()=>msg.classList.remove('show'),2000);
+  }catch(e){console.error('저장 오류',e);}
+}
+
+function autoSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(persist,600);
+}
+
+async function loadStored(){
+  try{
+    const res=await window.storage.get(STORE_KEY);
+    if(res && res.value){
+      const data=JSON.parse(res.value);
+      if(data.tasks) tasks=data.tasks;
+      if(data.schedules) schedules=data.schedules;
+      if(data.lunch) lunch=data.lunch;
+    }
+  }catch(e){/* 저장 데이터 없음 */}
+  loaded=true;
+  renderCalendar();
+  renderSections();
+}
 
 function renderCalendar(){
   const ws=getWeekStart(weekOffset),we=new Date(ws);we.setDate(we.getDate()+6);
@@ -140,13 +169,10 @@ function renderCalendar(){
     const d=new Date(ws);d.setDate(ws.getDate()+i);
     const isToday=d.getTime()===today.getTime();
     const dateStr=fmtKey(d);
-    const amKey=getSchedKey(dateStr,'am'),pmKey=getSchedKey(dateStr,'pm');
-    const amList=schedules[amKey]||[];
-    const pmList=schedules[pmKey]||[];
-
-    const amItems=amList.map((s,idx)=>`<div style="display:flex;align-items:flex-start;gap:2px"><span class="sched-text">· ${escHtml(s)}</span><button class="sched-del" onclick="delSched('${amKey}',${idx},event)">✕</button></div>`).join('');
-    const pmItems=pmList.map((s,idx)=>`<div style="display:flex;align-items:flex-start;gap:2px"><span class="sched-text">· ${escHtml(s)}</span><button class="sched-del" onclick="delSched('${pmKey}',${idx},event)">✕</button></div>`).join('');
-
+    const amKey=`${dateStr}_am`,pmKey=`${dateStr}_pm`;
+    const amList=schedules[amKey]||[],pmList=schedules[pmKey]||[];
+    const amItems=amList.map((s,idx)=>`<div style="display:flex;align-items:flex-start;gap:2px"><span class="sched-text">· ${esc(s)}</span><button class="sched-del" onclick="delSched('${amKey}',${idx},event)">✕</button></div>`).join('');
+    const pmItems=pmList.map((s,idx)=>`<div style="display:flex;align-items:flex-start;gap:2px"><span class="sched-text">· ${esc(s)}</span><button class="sched-del" onclick="delSched('${pmKey}',${idx},event)">✕</button></div>`).join('');
     const col=document.createElement('div');col.className='day-col';
     col.innerHTML=`
       <div class="day-name">${DAYS[i]}</div>
@@ -154,11 +180,11 @@ function renderCalendar(){
       <div class="sched-col">
         <div class="sched-slot" onclick="openModal('${amKey}','${fmt(d)} 오전')">
           <div class="sched-label">오전</div>
-          ${amItems||`<div class="sched-empty">+ 추가</div>`}
+          ${amItems||'<div class="sched-empty">+ 추가</div>'}
         </div>
         <div class="sched-slot" onclick="openModal('${pmKey}','${fmt(d)} 오후')">
           <div class="sched-label">오후</div>
-          ${pmItems||`<div class="sched-empty">+ 추가</div>`}
+          ${pmItems||'<div class="sched-empty">+ 추가</div>'}
         </div>
       </div>`;
     cal.appendChild(col);
@@ -178,12 +204,12 @@ function confirmModal(){
   if(!val||!modalTarget)return;
   if(!schedules[modalTarget])schedules[modalTarget]=[];
   schedules[modalTarget].push(val);
-  closeModal();renderCalendar();
+  closeModal();renderCalendar();autoSave();
 }
 function delSched(key,idx,e){
   e.stopPropagation();
   schedules[key].splice(idx,1);
-  renderCalendar();
+  renderCalendar();autoSave();
 }
 document.getElementById('modal-input').addEventListener('keydown',e=>{if(e.key==='Enter')confirmModal();if(e.key==='Escape')closeModal();});
 document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
@@ -192,29 +218,39 @@ function getTasks(id){const wk=getWeekKey();if(!tasks[wk])tasks[wk]={};if(!tasks
 function addTask(id){
   const input=document.getElementById(`input-${id}`);
   const text=input.value.trim();if(!text)return;
-  getTasks(id).push({id:Date.now(),text,done:false});input.value='';renderSections();
+  getTasks(id).push({id:Date.now(),text,done:false});
+  input.value='';renderSections();autoSave();
 }
-function toggleTask(id,tid){const t=getTasks(id).find(x=>x.id===tid);if(t)t.done=!t.done;renderSections();}
-function deleteTask(id,tid){const wk=getWeekKey();tasks[wk][id]=tasks[wk][id].filter(x=>x.id!==tid);renderSections();}
+function toggleTask(id,tid){
+  const t=getTasks(id).find(x=>x.id===tid);if(t)t.done=!t.done;
+  renderSections();autoSave();
+}
+function deleteTask(id,tid){
+  const wk=getWeekKey();tasks[wk][id]=tasks[wk][id].filter(x=>x.id!==tid);
+  renderSections();autoSave();
+}
 function toggleCollapse(id){collapsed[id]=!collapsed[id];renderSections();}
 function toggleLunch(id,el){
   lunch[id]=el.checked;
   const lbl=el.closest('label');
   lbl.style.background=el.checked?'rgba(247,147,79,0.25)':'rgba(255,255,255,0.6)';
   lbl.style.color=el.checked?'#c0622a':'#555';
+  autoSave();
 }
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function renderSections(){
+  if(!loaded)return;
   const container=document.getElementById('sections');container.innerHTML='';
   MEMBERS.forEach(m=>{
     const list=getTasks(m.id),done=list.filter(t=>t.done).length,isColl=collapsed[m.id];
+    const isLunch=lunch[m.id]||false;
     const sec=document.createElement('div');sec.className='section';
     sec.style.background=m.bg;sec.style.boxShadow=`2px 4px 0 ${m.shadow}`;
     const items=list.map(t=>`
       <li class="task-item">
         <div class="task-check${t.done?' checked':''}" onclick="toggleTask('${m.id}',${t.id})"></div>
-        <span class="task-text${t.done?' done':''}">${escHtml(t.text)}</span>
+        <span class="task-text${t.done?' done':''}">${esc(t.text)}</span>
         <button class="task-del" onclick="deleteTask('${m.id}',${t.id})">✕</button>
       </li>`).join('');
     sec.innerHTML=`
@@ -227,8 +263,8 @@ function renderSections(){
           </div>
         </div>
         <div class="header-right">
-          <label class="lunch-label" onclick="event.stopPropagation()">
-            <input type="checkbox" id="lunch-${m.id}" onchange="toggleLunch('${m.id}',this)" style="width:15px;height:15px;accent-color:#f7934f;cursor:pointer;margin:0">
+          <label class="lunch-label" onclick="event.stopPropagation()" style="background:${isLunch?'rgba(247,147,79,0.25)':'rgba(255,255,255,0.6)'};color:${isLunch?'#c0622a':'#555'}">
+            <input type="checkbox" id="lunch-${m.id}" ${isLunch?'checked':''} onchange="toggleLunch('${m.id}',this)" style="width:15px;height:15px;accent-color:#f7934f;cursor:pointer;margin:0">
             🍱 점심약속
           </label>
           <span class="badge">${done}/${list.length} 완료</span>
@@ -246,7 +282,8 @@ function renderSections(){
 }
 
 function changeWeek(dir){if(dir===0)weekOffset=0;else weekOffset+=dir;renderCalendar();renderSections();}
-renderCalendar();renderSections();
+renderCalendar();
+loadStored();
 </script>
 </body>
 </html>
