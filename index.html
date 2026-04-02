@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>총무인사팀 위클리</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh}
+.app{max-width:900px;margin:0 auto;padding:16px}
+.top-bar{background:#fff;border-radius:16px;padding:16px 20px;margin-bottom:14px;border:1px solid #e8eaf0;display:flex;align-items:center;justify-content:space-between}
+.top-bar h1{font-size:18px;font-weight:700;color:#1a1a2e}
+.top-bar span{font-size:13px;color:#8b8fa8;background:#f0f1f8;padding:4px 12px;border-radius:20px}
+.week-nav{background:linear-gradient(135deg,#4f6ef7,#7c5cbf);border-radius:16px;padding:16px 20px;margin-bottom:14px}
+.week-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.week-label{font-size:15px;font-weight:700;color:#fff}
+.nav-btns{display:flex;gap:6px}
+.nav-btn{background:rgba(255,255,255,0.2);border:none;border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:16px;color:#fff;transition:background 0.15s}
+.nav-btn:hover{background:rgba(255,255,255,0.35)}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day-col{display:flex;flex-direction:column;align-items:center;gap:6px}
+.day-name{font-size:16px;font-weight:800;color:rgba(255,255,255,0.85);letter-spacing:0.5px}
+.day-num{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:rgba(255,255,255,0.9)}
+.day-num.today{background:#fff;color:#4f6ef7;font-weight:800}
+.day-num.sat{color:#b8cfff}
+.day-num.sun{color:#ffb8c8}
+.sched-col{width:100%;display:flex;flex-direction:column;gap:4px;margin-top:2px}
+.sched-slot{background:rgba(255,255,255,0.15);border-radius:8px;padding:4px 5px;min-height:44px;cursor:pointer;transition:background 0.15s;position:relative}
+.sched-slot:hover{background:rgba(255,255,255,0.25)}
+.sched-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.6);margin-bottom:2px;letter-spacing:0.3px}
+.sched-text{font-size:11px;color:#fff;font-weight:500;line-height:1.3;word-break:keep-all}
+.sched-empty{font-size:10px;color:rgba(255,255,255,0.35);text-align:center;margin-top:4px}
+.sched-del{position:absolute;top:3px;right:3px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:11px;cursor:pointer;padding:0;line-height:1}
+.sched-del:hover{color:#fff}
+.sections{display:flex;flex-direction:column;gap:12px}
+.section{border-radius:16px;overflow:hidden;box-shadow:2px 3px 0 rgba(0,0,0,0.07)}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none}
+.member-info{display:flex;align-items:center;gap:10px}
+.kakao-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:28px;background:rgba(255,255,255,0.55);border:2px solid rgba(255,255,255,0.8)}
+.member-name{font-size:15px;font-weight:700;color:#2d2d2d}
+.member-role{font-size:12px;color:#777;margin-top:1px}
+.header-right{display:flex;align-items:center;gap:8px}
+.lunch-label{display:flex;align-items:center;gap:5px;cursor:pointer;background:rgba(255,255,255,0.6);border:1.5px solid rgba(255,255,255,0.9);border-radius:20px;padding:4px 10px 4px 8px;font-size:12px;font-weight:600;color:#555;white-space:nowrap}
+.badge{font-size:12px;background:rgba(255,255,255,0.6);color:#444;padding:4px 12px;border-radius:20px;font-weight:600;border:1px solid rgba(255,255,255,0.8)}
+.section-body{padding:0 16px 14px;display:block}
+.section-body.collapsed{display:none}
+.task-list{list-style:none;margin-bottom:10px}
+.task-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.06)}
+.task-item:last-child{border-bottom:none}
+.task-check{width:20px;height:20px;border-radius:6px;border:2px solid rgba(0,0,0,0.18);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all 0.15s;background:rgba(255,255,255,0.7)}
+.task-check.checked{border-color:#555;background:#555}
+.task-check.checked::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
+.task-text{flex:1;font-size:14px;color:#2d2d2d;line-height:1.5}
+.task-text.done{text-decoration:line-through;color:#aaa}
+.task-del{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:14px;padding:0 2px;transition:color 0.15s;flex-shrink:0}
+.task-del:hover{color:#e05}
+.add-row{display:flex;gap:8px;margin-top:6px}
+.add-input{flex:1;border:1.5px solid rgba(255,255,255,0.7);border-radius:10px;padding:8px 12px;font-size:14px;color:#2d2d2d;background:rgba(255,255,255,0.6);outline:none;transition:border 0.15s}
+.add-input:focus{border-color:rgba(0,0,0,0.25);background:rgba(255,255,255,0.9)}
+.add-input::placeholder{color:#bbb}
+.add-btn{background:rgba(255,255,255,0.75);color:#333;border:1.5px solid rgba(255,255,255,0.9);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.add-btn:hover{background:rgba(255,255,255,0.95)}
+.empty{font-size:13px;color:#bbb;padding:10px 0;text-align:center}
+
+/* 모달 */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;z-index:100}
+.modal{background:#fff;border-radius:16px;padding:24px;width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.18)}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:16px;color:#1a1a2e}
+.modal input{width:100%;border:1.5px solid #e0e2f0;border-radius:10px;padding:10px 12px;font-size:14px;outline:none;margin-bottom:10px}
+.modal input:focus{border-color:#4f6ef7}
+.modal-btns{display:flex;gap:8px;margin-top:6px}
+.modal-ok{flex:1;background:#4f6ef7;color:#fff;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:700;cursor:pointer}
+.modal-ok:hover{background:#3a5ce0}
+.modal-cancel{flex:1;background:#f0f1f8;color:#555;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top-bar">
+    <h1>총무인사팀 주간업무</h1>
+    <span id="today-label"></span>
+  </div>
+
+  <div class="week-nav">
+    <div class="week-header">
+      <span class="week-label" id="week-label"></span>
+      <div class="nav-btns">
+        <button class="nav-btn" onclick="changeWeek(-1)">&#8592;</button>
+        <button class="nav-btn" onclick="changeWeek(0)">오늘</button>
+        <button class="nav-btn" onclick="changeWeek(1)">&#8594;</button>
+      </div>
+    </div>
+    <div class="calendar-grid" id="calendar"></div>
+  </div>
+
+  <div class="sections" id="sections"></div>
+</div>
+
+<!-- 일정 입력 모달 -->
+<div class="modal-bg" id="modal" style="display:none">
+  <div class="modal">
+    <h3 id="modal-title">일정 추가</h3>
+    <input id="modal-input" type="text" placeholder="예) 신입공채 면접, 임원회의...">
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">취소</button>
+      <button class="modal-ok" onclick="confirmModal()">추가</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MEMBERS=[
+  {id:'boss',name:'팀장 지시사항',role:'',emoji:'🐘',bg:'#FFF8DC',shadow:'#e8d88a'},
+  {id:'noh',name:'노지혜',role:'과장',emoji:'🐰',bg:'#FFE4F0',shadow:'#f0b8d4'},
+  {id:'cho',name:'조성근',role:'과장',emoji:'🦁',bg:'#FFF0DC',shadow:'#f0d09a'},
+  {id:'choi',name:'최원익',role:'직원',emoji:'🦖',bg:'#DCF0FF',shadow:'#9acce8'},
+  {id:'park',name:'박나리',role:'직원',emoji:'🐨',bg:'#FFE8DC',shadow:'#f0c0a0'},
+  {id:'shin',name:'신우연',role:'직원',emoji:'🐱',bg:'#DCF8EC',shadow:'#9ae0bc'},
+];
+const DAYS=['일','월','화','수','목','금','토'];
+let weekOffset=0, tasks={}, collapsed={}, lunch={}, schedules={};
+let modalTarget=null;
+
+function getWeekStart(offset=0){
+  const d=new Date(),day=d.getDay();
+  d.setDate(d.getDate()-day+offset*7);d.setHours(0,0,0,0);return d;
+}
+function fmtKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function getWeekKey(){return fmtKey(getWeekStart(weekOffset))}
+function getSchedKey(dateStr,slot){return `${dateStr}_${slot}`}
+
+function renderCalendar(){
+  const ws=getWeekStart(weekOffset),we=new Date(ws);we.setDate(we.getDate()+6);
+  const today=new Date();today.setHours(0,0,0,0);
+  const fmt=d=>`${d.getMonth()+1}/${d.getDate()}`;
+  document.getElementById('week-label').textContent=`${ws.getFullYear()}년 ${fmt(ws)} — ${fmt(we)}`;
+  document.getElementById('today-label').textContent=today.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+  const cal=document.getElementById('calendar');cal.innerHTML='';
+  for(let i=0;i<7;i++){
+    const d=new Date(ws);d.setDate(ws.getDate()+i);
+    const isToday=d.getTime()===today.getTime();
+    const dateStr=fmtKey(d);
+    const amKey=getSchedKey(dateStr,'am'),pmKey=getSchedKey(dateStr,'pm');
+    const amList=schedules[amKey]||[];
+    const pmList=schedules[pmKey]||[];
+
+    const amItems=amList.map((s,idx)=>`<div style="display:flex;align-items:flex-start;gap:2px"><span class="sched-text">· ${escHtml(s)}</span><button class="sched-del" onclick="delSched('${amKey}',${idx},event)">✕</button></div>`).join('');
+    const pmItems=pmList.map((s,idx)=>`<div style="display:flex;align-items:flex-start;gap:2px"><span class="sched-text">· ${escHtml(s)}</span><button class="sched-del" onclick="delSched('${pmKey}',${idx},event)">✕</button></div>`).join('');
+
+    const col=document.createElement('div');col.className='day-col';
+    col.innerHTML=`
+      <div class="day-name">${DAYS[i]}</div>
+      <div class="day-num${isToday?' today':''}${i===6?' sat':''}${i===0?' sun':''}">${d.getDate()}</div>
+      <div class="sched-col">
+        <div class="sched-slot" onclick="openModal('${amKey}','${fmt(d)} 오전')">
+          <div class="sched-label">오전</div>
+          ${amItems||`<div class="sched-empty">+ 추가</div>`}
+        </div>
+        <div class="sched-slot" onclick="openModal('${pmKey}','${fmt(d)} 오후')">
+          <div class="sched-label">오후</div>
+          ${pmItems||`<div class="sched-empty">+ 추가</div>`}
+        </div>
+      </div>`;
+    cal.appendChild(col);
+  }
+}
+
+function openModal(key,label){
+  modalTarget=key;
+  document.getElementById('modal-title').textContent=`📅 ${label} 일정 추가`;
+  document.getElementById('modal-input').value='';
+  document.getElementById('modal').style.display='flex';
+  setTimeout(()=>document.getElementById('modal-input').focus(),100);
+}
+function closeModal(){document.getElementById('modal').style.display='none';modalTarget=null;}
+function confirmModal(){
+  const val=document.getElementById('modal-input').value.trim();
+  if(!val||!modalTarget)return;
+  if(!schedules[modalTarget])schedules[modalTarget]=[];
+  schedules[modalTarget].push(val);
+  closeModal();renderCalendar();
+}
+function delSched(key,idx,e){
+  e.stopPropagation();
+  schedules[key].splice(idx,1);
+  renderCalendar();
+}
+document.getElementById('modal-input').addEventListener('keydown',e=>{if(e.key==='Enter')confirmModal();if(e.key==='Escape')closeModal();});
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+
+function getTasks(id){const wk=getWeekKey();if(!tasks[wk])tasks[wk]={};if(!tasks[wk][id])tasks[wk][id]=[];return tasks[wk][id];}
+function addTask(id){
+  const input=document.getElementById(`input-${id}`);
+  const text=input.value.trim();if(!text)return;
+  getTasks(id).push({id:Date.now(),text,done:false});input.value='';renderSections();
+}
+function toggleTask(id,tid){const t=getTasks(id).find(x=>x.id===tid);if(t)t.done=!t.done;renderSections();}
+function deleteTask(id,tid){const wk=getWeekKey();tasks[wk][id]=tasks[wk][id].filter(x=>x.id!==tid);renderSections();}
+function toggleCollapse(id){collapsed[id]=!collapsed[id];renderSections();}
+function toggleLunch(id,el){
+  lunch[id]=el.checked;
+  const lbl=el.closest('label');
+  lbl.style.background=el.checked?'rgba(247,147,79,0.25)':'rgba(255,255,255,0.6)';
+  lbl.style.color=el.checked?'#c0622a':'#555';
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function renderSections(){
+  const container=document.getElementById('sections');container.innerHTML='';
+  MEMBERS.forEach(m=>{
+    const list=getTasks(m.id),done=list.filter(t=>t.done).length,isColl=collapsed[m.id];
+    const sec=document.createElement('div');sec.className='section';
+    sec.style.background=m.bg;sec.style.boxShadow=`2px 4px 0 ${m.shadow}`;
+    const items=list.map(t=>`
+      <li class="task-item">
+        <div class="task-check${t.done?' checked':''}" onclick="toggleTask('${m.id}',${t.id})"></div>
+        <span class="task-text${t.done?' done':''}">${escHtml(t.text)}</span>
+        <button class="task-del" onclick="deleteTask('${m.id}',${t.id})">✕</button>
+      </li>`).join('');
+    sec.innerHTML=`
+      <div class="section-header" onclick="toggleCollapse('${m.id}')">
+        <div class="member-info">
+          <div class="kakao-avatar">${m.emoji}</div>
+          <div>
+            <div class="member-name">${m.name}</div>
+            ${m.role?`<div class="member-role">${m.role}</div>`:''}
+          </div>
+        </div>
+        <div class="header-right">
+          <label class="lunch-label" onclick="event.stopPropagation()">
+            <input type="checkbox" id="lunch-${m.id}" onchange="toggleLunch('${m.id}',this)" style="width:15px;height:15px;accent-color:#f7934f;cursor:pointer;margin:0">
+            🍱 점심약속
+          </label>
+          <span class="badge">${done}/${list.length} 완료</span>
+        </div>
+      </div>
+      <div class="section-body${isColl?' collapsed':''}">
+        <ul class="task-list">${items||'<div class="empty">등록된 업무가 없습니다</div>'}</ul>
+        <div class="add-row">
+          <input id="input-${m.id}" class="add-input" type="text" placeholder="업무 추가..." onkeydown="if(event.key==='Enter')addTask('${m.id}')">
+          <button class="add-btn" onclick="addTask('${m.id}')">추가</button>
+        </div>
+      </div>`;
+    container.appendChild(sec);
+  });
+}
+
+function changeWeek(dir){if(dir===0)weekOffset=0;else weekOffset+=dir;renderCalendar();renderSections();}
+renderCalendar();renderSections();
+</script>
+</body>
+</html>
