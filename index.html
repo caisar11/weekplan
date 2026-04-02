@@ -116,8 +116,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3qhjqdIZinZvFefLKN2F6F6n732znwjQ",
@@ -146,7 +146,7 @@ let weekOffset=0, state={tasks:{},schedules:{},lunch:{}};
 let modalTarget=null, saveTimer=null, connected=false;
 
 // Firebase 실시간 연결 감지
-import { ref as dbRef } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+import { ref as dbRef } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 const connRef = ref(db, '.info/connected');
 onValue(connRef, snap => {
   connected = snap.val() === true;
