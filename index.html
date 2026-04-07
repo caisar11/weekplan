@@ -7,10 +7,9 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f6fa;color:#1a1a2e;min-height:100vh}
-.app{max-width:900px;margin:0 auto;padding:16px}
+.app{max-width:980px;margin:0 auto;padding:16px}
 .top-bar{background:#fff;border-radius:16px;padding:14px 20px;margin-bottom:14px;border:1px solid #e8eaf0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .top-bar h1{font-size:18px;font-weight:700;color:#1a1a2e}
-.top-right{display:flex;align-items:center;gap:8px}
 .today-badge{font-size:13px;color:#8b8fa8;background:#f0f1f8;padding:4px 12px;border-radius:20px}
 .sync-msg{font-size:12px;font-weight:600;opacity:0;transition:opacity 0.4s;padding:4px 10px;border-radius:20px}
 .sync-msg.show{opacity:1}
@@ -27,7 +26,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .nav-btn:hover{background:rgba(255,255,255,0.35)}
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .day-col{display:flex;flex-direction:column;align-items:center;gap:6px}
-.day-name{font-size:16px;font-weight:800;color:rgba(255,255,255,0.85);letter-spacing:0.5px}
+.day-name{font-size:16px;font-weight:800;color:rgba(255,255,255,0.85)}
 .day-num{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:rgba(255,255,255,0.9)}
 .day-num.today{background:#fff;color:#4f6ef7;font-weight:800}
 .day-num.sat{color:#b8cfff}
@@ -40,6 +39,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sched-empty{font-size:10px;color:rgba(255,255,255,0.35);text-align:center;margin-top:4px}
 .sched-del{position:absolute;top:3px;right:3px;background:none;border:none;color:rgba(255,255,255,0.4);font-size:11px;cursor:pointer;padding:0}
 .sched-del:hover{color:#fff}
+.status-table-wrap{background:#fff;border-radius:16px;padding:16px 20px;margin-bottom:14px;border:1px solid #e8eaf0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.status-table-wrap h2{font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:12px}
+.status-table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px}
+.status-table th{padding:7px 10px;text-align:center;color:#888;font-weight:700;border-bottom:2px solid #e8eaf0;white-space:nowrap}
+.status-table th.name-col{text-align:left;color:#555}
+.status-table td{padding:6px 4px;vertical-align:middle;border-bottom:1px solid #f0f1f8}
+.status-table td.name-cell{padding-left:10px;font-weight:700;font-size:14px;color:#2d2d2d;white-space:nowrap}
+.day-group{display:flex;flex-direction:column;gap:3px;align-items:center}
+.chk-row{display:flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer;padding:2px 4px;border-radius:6px;transition:background 0.12s}
+.chk-row:hover{background:#f0f1f8}
+.chk-box{width:16px;height:16px;border-radius:4px;border:2px solid #d0d2de;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;background:#fff}
+.chk-box.lunch-on{background:#ffe234;border-color:#e6c200}
+.chk-box.am-on{background:#ff4d4d;border-color:#cc0000}
+.chk-box.pm-on{background:#ff4d4d;border-color:#cc0000}
+.chk-label{font-size:11px;color:#666}
+.chk-row.active-lunch .chk-label{color:#a07800;font-weight:700}
+.chk-row.active-am .chk-label{color:#cc0000;font-weight:700}
+.chk-row.active-pm .chk-label{color:#cc0000;font-weight:700}
+.today-th{color:#4f6ef7 !important}
+.today-td{background:#dde4ff}
 .sections{display:flex;flex-direction:column;gap:12px}
 .section{border-radius:16px;overflow:hidden;box-shadow:2px 3px 0 rgba(0,0,0,0.07)}
 .section-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none}
@@ -47,8 +66,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .kakao-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:28px;background:rgba(255,255,255,0.55);border:2px solid rgba(255,255,255,0.8)}
 .member-name{font-size:15px;font-weight:700;color:#2d2d2d}
 .member-role{font-size:12px;color:#777;margin-top:1px}
-.header-right{display:flex;align-items:center;gap:8px}
-.lunch-label{display:flex;align-items:center;gap:5px;cursor:pointer;background:rgba(255,255,255,0.6);border:1.5px solid rgba(255,255,255,0.9);border-radius:20px;padding:4px 10px 4px 8px;font-size:12px;font-weight:600;color:#555;white-space:nowrap}
 .badge{font-size:12px;background:rgba(255,255,255,0.6);color:#444;padding:4px 12px;border-radius:20px;font-weight:600;border:1px solid rgba(255,255,255,0.8)}
 .section-body{padding:0 16px 14px}
 .section-body.collapsed{display:none}
@@ -84,12 +101,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app">
   <div class="top-bar">
     <h1>총무인사팀 주간업무</h1>
-    <div class="top-right">
+    <div style="display:flex;align-items:center;gap:8px">
       <div class="conn-dot" id="conn-dot" title="서버 연결 상태"></div>
       <span class="sync-msg" id="sync-msg"></span>
       <span class="today-badge" id="today-label"></span>
     </div>
   </div>
+
   <div class="week-nav">
     <div class="week-header">
       <span class="week-label" id="week-label"></span>
@@ -101,6 +119,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="calendar-grid" id="calendar"></div>
   </div>
+
+  <div class="status-table-wrap">
+    <h2>📋 주간 현황</h2>
+    <div id="status-table-container"></div>
+  </div>
+
   <div class="sections" id="sections"><div class="loading">🔥 Firebase 연결 중...</div></div>
 </div>
 
@@ -117,7 +141,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD3qhjqdIZinZvFefLKN2F6F6n732znwjQ",
@@ -133,67 +157,74 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const MEMBERS=[
-  {id:'boss',name:'팀장 확인사항',role:'',emoji:'🐘',bg:'#FFF8DC',shadow:'#e8d88a'},
+  {id:'boss',name:'팀장 지시사항',role:'',emoji:'🐘',bg:'#FFF8DC',shadow:'#e8d88a'},
+  {id:'jin',name:'진차범',role:'과장',emoji:'🐘',bg:'#E8F4FF',shadow:'#a0c8f0'},
   {id:'noh',name:'노지혜',role:'과장',emoji:'🐰',bg:'#FFE4F0',shadow:'#f0b8d4'},
   {id:'cho',name:'조성근',role:'과장',emoji:'🦁',bg:'#FFF0DC',shadow:'#f0d09a'},
   {id:'choi',name:'최원익',role:'직원',emoji:'🦖',bg:'#DCF0FF',shadow:'#9acce8'},
   {id:'park',name:'박나리',role:'직원',emoji:'🐨',bg:'#FFE8DC',shadow:'#f0c0a0'},
   {id:'shin',name:'신우연',role:'직원',emoji:'🐱',bg:'#DCF8EC',shadow:'#9ae0bc'},
 ];
-const DAYS=['일','월','화','수','목','금','토'];
+const TEAM=[
+  {id:'jin',name:'진차범',emoji:'🐘'},
+  {id:'noh',name:'노지혜',emoji:'🐰'},
+  {id:'cho',name:'조성근',emoji:'🦁'},
+  {id:'choi',name:'최원익',emoji:'🦖'},
+  {id:'park',name:'박나리',emoji:'🐨'},
+  {id:'shin',name:'신우연',emoji:'🐱'},
+];
+const ALL_DAYS=['일','월','화','수','목','금','토'];
+const WEEKDAY_IDX=[1,2,3,4,5];
 
-let weekOffset=0, state={tasks:{},schedules:{},lunch:{}};
-let modalTarget=null, saveTimer=null, connected=false;
+let weekOffset=0, state={tasks:{},schedules:{},status:{}};
+let modalTarget=null, saveTimer=null, collapsed={};
 
-// Firebase 실시간 연결 감지
-import { ref as dbRef } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-const connRef = ref(db, '.info/connected');
-onValue(connRef, snap => {
-  connected = snap.val() === true;
-  const dot = document.getElementById('conn-dot');
-  dot.className = 'conn-dot ' + (connected ? 'on' : 'off');
-  dot.title = connected ? '서버 연결됨' : '연결 끊김';
+// ── Firebase 연결 상태 ───────────────────────────────────
+const connRef = ref(db,'.info/connected');
+onValue(connRef, snap=>{
+  const ok=snap.val()===true;
+  const dot=document.getElementById('conn-dot');
+  dot.className='conn-dot '+(ok?'on':'off');
+  dot.title=ok?'서버 연결됨':'연결 끊김';
 });
 
-// Firebase 실시간 데이터 수신
-const dataRef = ref(db, 'hrteam');
-onValue(dataRef, snap => {
-  const val = snap.val();
+// ── Firebase 실시간 데이터 ───────────────────────────────
+const dataRef = ref(db,'hrteam');
+onValue(dataRef, snap=>{
+  const val=snap.val();
   if(val){
-    state.tasks = val.tasks || {};
-    state.schedules = val.schedules || {};
-    state.lunch = val.lunch || {};
+    state.tasks=val.tasks||{};
+    state.schedules=val.schedules||{};
+    state.status=val.status||{};
   }
   renderCalendar();
+  renderStatusTable();
   renderSections();
 });
 
-// Firebase 저장
+// ── Firebase 저장 ────────────────────────────────────────
 async function persist(){
   try{
-    await set(ref(db,'hrteam'), state);
+    await set(ref(db,'hrteam'),state);
     showMsg('✓ 저장됨','ok');
   }catch(e){
     showMsg('저장 실패','err');
-    console.error(e);
   }
 }
-function autoSave(){
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(persist, 600);
-}
-function showMsg(txt, type){
-  const m = document.getElementById('sync-msg');
-  m.textContent = txt;
-  m.className = `sync-msg show ${type}`;
-  clearTimeout(window._msgTimer);
-  window._msgTimer = setTimeout(()=> m.className='sync-msg', 2200);
+function autoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(persist,600);}
+function showMsg(txt,type){
+  const m=document.getElementById('sync-msg');
+  m.textContent=txt;m.className=`sync-msg show ${type}`;
+  clearTimeout(window._mt);window._mt=setTimeout(()=>m.className='sync-msg',2200);
 }
 
+// ── date helpers ─────────────────────────────────────────
 function fmtKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function getWeekStart(offset=0){const d=new Date(),day=d.getDay();d.setDate(d.getDate()-day+offset*7);d.setHours(0,0,0,0);return d;}
+function getWeekStart(off=0){const d=new Date(),day=d.getDay();d.setDate(d.getDate()-day+off*7);d.setHours(0,0,0,0);return d;}
 function getWeekKey(){return fmtKey(getWeekStart(weekOffset));}
+function getWeekdays(){const ws=getWeekStart(weekOffset);return WEEKDAY_IDX.map(i=>{const d=new Date(ws);d.setDate(ws.getDate()+i);return d;});}
 
+// ── calendar ─────────────────────────────────────────────
 function renderCalendar(){
   const ws=getWeekStart(weekOffset),we=new Date(ws);we.setDate(we.getDate()+6);
   const today=new Date();today.setHours(0,0,0,0);
@@ -211,92 +242,130 @@ function renderCalendar(){
     const pmItems=pmList.map((s,idx)=>`<div style="display:flex;align-items:flex-start;gap:2px"><span class="sched-text">· ${esc(s)}</span><button class="sched-del" onclick="window._delSched('${pmKey}',${idx},event)">✕</button></div>`).join('');
     const col=document.createElement('div');col.className='day-col';
     col.innerHTML=`
-      <div class="day-name">${DAYS[i]}</div>
+      <div class="day-name">${ALL_DAYS[i]}</div>
       <div class="day-num${isToday?' today':''}${i===6?' sat':''}${i===0?' sun':''}">${d.getDate()}</div>
       <div class="sched-col">
         <div class="sched-slot" onclick="window._openModal('${amKey}','${fmt(d)} 오전')">
-          <div class="sched-label">오전</div>
-          ${amItems||'<div class="sched-empty">+ 추가</div>'}
+          <div class="sched-label">오전</div>${amItems||'<div class="sched-empty">+ 추가</div>'}
         </div>
         <div class="sched-slot" onclick="window._openModal('${pmKey}','${fmt(d)} 오후')">
-          <div class="sched-label">오후</div>
-          ${pmItems||'<div class="sched-empty">+ 추가</div>'}
+          <div class="sched-label">오후</div>${pmItems||'<div class="sched-empty">+ 추가</div>'}
         </div>
       </div>`;
     cal.appendChild(col);
   }
 }
 
-window._openModal = function(key,label){
+// ── modal ────────────────────────────────────────────────
+window._openModal=function(key,label){
   modalTarget=key;
   document.getElementById('modal-title').textContent=`📅 ${label} 일정 추가`;
   document.getElementById('modal-input').value='';
   document.getElementById('modal').style.display='flex';
   setTimeout(()=>document.getElementById('modal-input').focus(),100);
-}
-window.closeModal = function(){document.getElementById('modal').style.display='none';modalTarget=null;}
-window.confirmModal = function(){
+};
+window.closeModal=function(){document.getElementById('modal').style.display='none';modalTarget=null;};
+window.confirmModal=function(){
   const val=document.getElementById('modal-input').value.trim();
   if(!val||!modalTarget)return;
   if(!state.schedules[modalTarget])state.schedules[modalTarget]=[];
   state.schedules[modalTarget].push(val);
-  closeModal();renderCalendar();autoSave();
-}
-window._delSched = function(key,idx,e){
+  window.closeModal();renderCalendar();autoSave();
+};
+window._delSched=function(key,idx,e){
   e.stopPropagation();
   state.schedules[key].splice(idx,1);
   renderCalendar();autoSave();
-}
-document.getElementById('modal-input').addEventListener('keydown',e=>{if(e.key==='Enter')confirmModal();if(e.key==='Escape')closeModal();});
-document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+};
+document.getElementById('modal-input').addEventListener('keydown',e=>{if(e.key==='Enter')window.confirmModal();if(e.key==='Escape')window.closeModal();});
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))window.closeModal();});
 
+// ── status table ─────────────────────────────────────────
+function getStatusObj(mid,dateStr){
+  const wk=getWeekKey();
+  if(!state.status[wk])state.status[wk]={};
+  if(!state.status[wk][mid])state.status[wk][mid]={};
+  if(!state.status[wk][mid][dateStr])state.status[wk][mid][dateStr]={lunch:false,am:false,pm:false};
+  return state.status[wk][mid][dateStr];
+}
+window._toggleStatus=function(mid,dateStr,type){
+  getStatusObj(mid,dateStr)[type]^=true;
+  renderStatusTable();autoSave();
+};
+
+function renderStatusTable(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=getWeekdays();
+  let html=`<table class="status-table"><thead><tr><th class="name-col">팀원</th>`;
+  days.forEach(d=>{
+    const isT=d.getTime()===today.getTime();
+    html+=`<th class="${isT?'today-th':''}">${d.getMonth()+1}/${d.getDate()}<br><span style="font-weight:400;font-size:11px">${ALL_DAYS[d.getDay()]}</span></th>`;
+  });
+  html+=`</tr></thead><tbody>`;
+  TEAM.forEach(m=>{
+    html+=`<tr><td class="name-cell"><span style="font-size:20px;display:block;line-height:1.2">${m.emoji}</span>${m.name}</td>`;
+    days.forEach(d=>{
+      const ds=fmtKey(d),isT=d.getTime()===today.getTime();
+      const obj=getStatusObj(m.id,ds);
+      html+=`<td class="${isT?'today-td':''}"><div class="day-group">
+        <div class="chk-row${obj.am?' active-am':''}" onclick="window._toggleStatus('${m.id}','${ds}','am')">
+          <div class="chk-box${obj.am?' am-on':''}">${obj.am?'✓':''}</div>
+          <span class="chk-label">오전반차</span>
+        </div>
+        <div class="chk-row${obj.lunch?' active-lunch':''}" onclick="window._toggleStatus('${m.id}','${ds}','lunch')">
+          <div class="chk-box${obj.lunch?' lunch-on':''}">${obj.lunch?'✓':''}</div>
+          <span class="chk-label">점심약속</span>
+        </div>
+        <div class="chk-row${obj.pm?' active-pm':''}" onclick="window._toggleStatus('${m.id}','${ds}','pm')">
+          <div class="chk-box${obj.pm?' pm-on':''}">${obj.pm?'✓':''}</div>
+          <span class="chk-label">오후반차</span>
+        </div>
+      </div></td>`;
+    });
+    html+=`</tr>`;
+  });
+  html+=`</tbody></table>`;
+  document.getElementById('status-table-container').innerHTML=html;
+}
+
+// ── tasks ─────────────────────────────────────────────────
 function getTasks(id){
   const wk=getWeekKey();
   if(!state.tasks[wk])state.tasks[wk]={};
   if(!state.tasks[wk][id])state.tasks[wk][id]=[];
   return state.tasks[wk][id];
 }
-window.addTask = function(id){
+window._addTask=function(id){
   const inp=document.getElementById(`input-${id}`);
   const text=inp.value.trim();if(!text)return;
   getTasks(id).push({id:Date.now(),text,done:false});
   inp.value='';renderSections();autoSave();
-}
-window.toggleTask = function(id,tid){
+};
+window._toggleTask=function(id,tid){
   const t=getTasks(id).find(x=>x.id===tid);if(t)t.done=!t.done;
   renderSections();autoSave();
-}
-window.deleteTask = function(id,tid){
+};
+window._deleteTask=function(id,tid){
   const wk=getWeekKey();
   state.tasks[wk][id]=state.tasks[wk][id].filter(x=>x.id!==tid);
   renderSections();autoSave();
-}
-let collapsed={};
-window.toggleCollapse = function(id){collapsed[id]=!collapsed[id];renderSections();}
-window.toggleLunch = function(id,el){
-  state.lunch[id]=el.checked;
-  const lbl=el.closest('label');
-  lbl.style.background=el.checked?'rgba(247,147,79,0.25)':'rgba(255,255,255,0.6)';
-  lbl.style.color=el.checked?'#c0622a':'#555';
-  autoSave();
-}
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+};
+window._toggleCollapse=function(id){collapsed[id]=!collapsed[id];renderSections();};
 
 function renderSections(){
   const container=document.getElementById('sections');container.innerHTML='';
   MEMBERS.forEach(m=>{
     const list=getTasks(m.id),done=list.filter(t=>t.done).length,isColl=collapsed[m.id];
-    const isLunch=state.lunch[m.id]||false;
     const sec=document.createElement('div');sec.className='section';
     sec.style.background=m.bg;sec.style.boxShadow=`2px 4px 0 ${m.shadow}`;
     const items=list.map(t=>`
       <li class="task-item">
-        <div class="task-check${t.done?' checked':''}" onclick="toggleTask('${m.id}',${t.id})"></div>
+        <div class="task-check${t.done?' checked':''}" onclick="window._toggleTask('${m.id}',${t.id})"></div>
         <span class="task-text${t.done?' done':''}">${esc(t.text)}</span>
-        <button class="task-del" onclick="deleteTask('${m.id}',${t.id})">✕</button>
+        <button class="task-del" onclick="window._deleteTask('${m.id}',${t.id})">✕</button>
       </li>`).join('');
     sec.innerHTML=`
-      <div class="section-header" onclick="toggleCollapse('${m.id}')">
+      <div class="section-header" onclick="window._toggleCollapse('${m.id}')">
         <div class="member-info">
           <div class="kakao-avatar">${m.emoji}</div>
           <div>
@@ -305,27 +374,33 @@ function renderSections(){
           </div>
         </div>
         <div class="header-right">
-          <label class="lunch-label" onclick="event.stopPropagation()" style="background:${isLunch?'rgba(247,147,79,0.25)':'rgba(255,255,255,0.6)'};color:${isLunch?'#c0622a':'#555'}">
-            <input type="checkbox" id="lunch-${m.id}" ${isLunch?'checked':''} onchange="toggleLunch('${m.id}',this)" style="width:15px;height:15px;accent-color:#f7934f;cursor:pointer;margin:0">
-            🍱 점심약속
-          </label>
           <span class="badge">${done}/${list.length} 완료</span>
+          <span style="font-size:18px;color:#aaa;margin-left:4px">${isColl?'▼':'▲'}</span>
         </div>
       </div>
       <div class="section-body${isColl?' collapsed':''}">
         <ul class="task-list">${items||'<div class="empty">등록된 업무가 없습니다</div>'}</ul>
         <div class="add-row">
-          <input id="input-${m.id}" class="add-input" type="text" placeholder="업무 추가..." onkeydown="if(event.key==='Enter')addTask('${m.id}')">
-          <button class="add-btn" onclick="addTask('${m.id}')">추가</button>
+          <input id="input-${m.id}" class="add-input" type="text"
+            placeholder="${m.id==='boss'?'지시사항 추가...':'업무 추가...'}"
+            onkeydown="if(event.key==='Enter')window._addTask('${m.id}')">
+          <button class="add-btn" onclick="window._addTask('${m.id}')">추가</button>
         </div>
       </div>`;
     container.appendChild(sec);
   });
 }
 
-window.changeWeek = function(dir){if(dir===0)weekOffset=0;else weekOffset+=dir;renderCalendar();renderSections();}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
+window.changeWeek=function(dir){
+  if(dir===0)weekOffset=0;else weekOffset+=dir;
+  renderCalendar();renderStatusTable();renderSections();
+};
+
+// 초기 렌더 (Firebase onValue 전 빈 화면 방지)
 renderCalendar();
+renderStatusTable();
 </script>
 </body>
 </html>
