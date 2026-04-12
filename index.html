@@ -327,12 +327,10 @@ function renderStatusTable(){
   document.getElementById('status-table-container').innerHTML=html;
 }
 
-// ── tasks ─────────────────────────────────────────────────
+// ── tasks (주차 무관 고정) ────────────────────────────────
 function getTasks(id){
-  const wk=getWeekKey();
-  if(!state.tasks[wk])state.tasks[wk]={};
-  if(!state.tasks[wk][id])state.tasks[wk][id]=[];
-  return state.tasks[wk][id];
+  if(!state.tasks[id])state.tasks[id]=[];
+  return state.tasks[id];
 }
 window._addTask=function(id){
   const inp=document.getElementById(`input-${id}`);
@@ -345,8 +343,7 @@ window._toggleTask=function(id,tid){
   renderSections();autoSave();
 };
 window._deleteTask=function(id,tid){
-  const wk=getWeekKey();
-  state.tasks[wk][id]=state.tasks[wk][id].filter(x=>x.id!==tid);
+  state.tasks[id]=state.tasks[id].filter(x=>x.id!==tid);
   renderSections();autoSave();
 };
 window._toggleCollapse=function(id){collapsed[id]=!collapsed[id];renderSections();};
